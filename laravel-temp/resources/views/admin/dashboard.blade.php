@@ -7,8 +7,6 @@
 
     <h1>Dashboard Admin</h1>
 
-    <hr>
-
     <h3>Total Dosen : {{ $totalDosen }}</h3>
 
     <h3>Total Mahasiswa : {{ $totalMahasiswa }}</h3>
