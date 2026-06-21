@@ -49,11 +49,13 @@
                         <span class="visually-hidden">unread messages</span>
                     </span>
                 </div>
-                <img src="https://ui-avatars.com/api/?name=Aurelia+Putri&background=F1986B&color=fff" class="rounded-circle me-3" width="45" height="45">
-                <div>
-                    <h6 class="mb-0 fw-bold">Aurelia Putri</h6>
-                    <small class="text-muted">Mahasiswa</small>
-                </div>
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=F1986B&color=fff" 
+                    class="rounded-circle me-3" width="45" height="45" alt="Profile">
+
+                    <div>
+                      <h6 class="mb-0 fw-bold">{{ Auth::user()->name }}</h6>
+                         <small class="text-muted">{{ ucfirst(Auth::user()->role) }}</small>
+            </div>
             </div>
         </div>
 

@@ -4,32 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Schedule;
 
 class Booking extends Model
 {
     use HasFactory;
 
+    // Izinkan kolom-kolom ini diisi form
     protected $fillable = [
-        'mahasiswa_id',
-        'schedule_id',
-        'topik',
+        'mahasiswa_id', 
+        'dosen_id', 
+        'tanggal', 
+        'sesi_waktu', 
+        'topik', 
+        'catatan', 
         'status'
     ];
 
-    public function mahasiswa()
+    // Relasi ke tabel dosen (User)
+    public function dosen()
     {
-        return $this->belongsTo(
-            User::class,
-            'mahasiswa_id'
-        );
-    }
-
-    public function schedule()
-    {
-        return $this->belongsTo(
-            Schedule::class
-        );
+        return $this->belongsTo(User::class, 'dosen_id');
     }
 }

@@ -1,16 +1,76 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DosenController;
+use App\Http\Controllers\BookingController; // Tambahkan ini di bagian atas
+use Illuminate\Support\Facades\Auth;
 
+/*
+|--------------------------------------------------------------------------
+| Rute Autentikasi & Utama
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
-    return view('mahasiswa.dashboard');
+    return redirect('/login');
 });
 
-Route::get('/admin/dashboard', [
-    AdminController::class,
-    'dashboard'
-]);
+// Rute Login
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Rute Register 
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'store']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Rute Dosen
+|--------------------------------------------------------------------------
+*/
+Route::prefix('dosen')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DosenController::class, 'dashboard']);
+    Route::post('/booking/{id}/status', [DosenController::class, 'updateStatus']);
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Rute UI Mahasiswa (Kerjaan Kamu)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
+    
+    // Dashboard Mahasiswa
+    Route::get('/dashboard', function () {
+        $id = Auth::id();
+        $total = \App\Models\Booking::where('mahasiswa_id', $id)->count();
+        $menunggu = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Menunggu')->count();
+        $disetujui = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Disetujui')->count();
+        
+        return view('mahasiswa.dashboard', compact('total', 'menunggu', 'disetujui'));
+    });
+    
+    // Booking
+    Route::get('/booking', [BookingController::class, 'create']);
+    Route::post('/booking', [BookingController::class, 'store']);
+    
+    // Riwayat
+    Route::get('/riwayat', [BookingController::class, 'index']);
+    
+    // Hapus Booking (Fitur Batalkan)
+    Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Rute Admin & Backend (Kerjaan Teman Kamu)
+|--------------------------------------------------------------------------
+*/
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
 Route::resource('users', UserController::class);
