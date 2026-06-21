@@ -1,0 +1,127 @@
+:root {
+    --bg-main: #FDF8F4;      
+    --bg-sidebar: #F5EAE1;   
+    --primary-orange: #F1986B; 
+    --hover-orange: #E08558;
+    --text-dark: #3E322D;
+    --text-muted: #8E837E;
+    --card-bg: #FFFFFF;
+    --stat-card-bg: #FCF4ED; 
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- LAYOUT & SIDEBAR --- */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-sidebar);
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    padding: 30px 20px;
+    z-index: 100;
+}
+
+.sidebar .nav-link {
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    padding: 12px 16px;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background-color: var(--primary-orange);
+    color: white !important;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 40px;
+    min-height: 100vh;
+}
+
+/* --- COMPONENTS --- */
+.card-custom {
+    background-color: var(--card-bg);
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(62, 50, 45, 0.04);
+    padding: 24px;
+}
+
+.stat-card {
+    background-color: var(--stat-card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.btn-orange {
+    background-color: var(--primary-orange);
+    color: white;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-orange:hover {
+    background-color: var(--hover-orange);
+    color: white;
+}
+
+.banner-cta {
+    background-color: var(--primary-orange);
+    border-radius: 20px;
+    color: white;
+    padding: 30px;
+}
+
+/* --- LOGIN STYLING --- */
+.login-container {
+    min-height: 100vh;
+    background-color: var(--bg-main);
+}
+.login-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    overflow: hidden;
+}
+
+/* --- FORM & TABLES --- */
+.form-control, .form-select {
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #EAE1DA;
+    background-color: #FCFBF9;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 0.25rem rgba(241, 152, 107, 0.25);
+}
+.table-custom th {
+    background-color: var(--bg-sidebar) !important;
+    color: var(--text-dark);
+    font-weight: 600;
+    border: none;
+}
+.table-custom td {
+    vertical-align: middle;
+    border-color: #F5EAE1;
+}
