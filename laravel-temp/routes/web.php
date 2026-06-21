@@ -5,7 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\BookingController; // Tambahkan ini di bagian atas
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\MahasiswaController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -22,7 +23,7 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Rute Register 
+// Rute Register
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'store']);
 
@@ -44,26 +45,31 @@ Route::prefix('dosen')->middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
-    
+
     // Dashboard Mahasiswa
     Route::get('/dashboard', function () {
         $id = Auth::id();
         $total = \App\Models\Booking::where('mahasiswa_id', $id)->count();
         $menunggu = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Menunggu')->count();
         $disetujui = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Disetujui')->count();
-        
+
         return view('mahasiswa.dashboard', compact('total', 'menunggu', 'disetujui'));
     });
-    
+
     // Booking
     Route::get('/booking', [BookingController::class, 'create']);
     Route::post('/booking', [BookingController::class, 'store']);
-    
+
     // Riwayat
     Route::get('/riwayat', [BookingController::class, 'index']);
-    
+
     // Hapus Booking (Fitur Batalkan)
     Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
+
+    // Pengaturan (Profil & Ubah Password)
+    Route::get('/pengaturan', [MahasiswaController::class, 'pengaturan'])->name('mahasiswa.pengaturan');
+    Route::put('/profil/update', [MahasiswaController::class, 'updateProfil'])->name('profil.update');
+    Route::put('/password/update', [MahasiswaController::class, 'updatePassword'])->name('password.update');
 });
 
 
