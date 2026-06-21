@@ -36,6 +36,9 @@ Route::post('/register', [AuthController::class, 'store']);
 Route::prefix('dosen')->middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DosenController::class, 'dashboard']);
     Route::post('/booking/{id}/status', [DosenController::class, 'updateStatus']);
+    Route::get('/pengaturan', [DosenController::class, 'pengaturan'])->name('dosen.pengaturan');
+    Route::put('/profil/update', [DosenController::class, 'updateProfil'])->name('dosen.profil.update');
+    Route::put('/password/update', [DosenController::class, 'updatePassword'])->name('dosen.password.update');
 });
 
 
@@ -68,8 +71,8 @@ Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
 
     // Pengaturan (Profil & Ubah Password)
     Route::get('/pengaturan', [MahasiswaController::class, 'pengaturan'])->name('mahasiswa.pengaturan');
-    Route::put('/profil/update', [MahasiswaController::class, 'updateProfil'])->name('profil.update');
-    Route::put('/password/update', [MahasiswaController::class, 'updatePassword'])->name('password.update');
+    Route::put('/profil/update', [MahasiswaController::class, 'updateProfil'])->name('mahasiswa.profil.update');
+    Route::put('/password/update', [MahasiswaController::class, 'updatePassword'])->name('mahasiswa.password.update');
 });
 
 

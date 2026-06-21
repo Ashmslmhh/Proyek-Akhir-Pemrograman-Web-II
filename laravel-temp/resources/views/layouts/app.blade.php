@@ -17,17 +17,28 @@
         </div>
 
         <nav class="nav flex-column flex-grow-1">
-            <a class="nav-link {{ Request::is('mahasiswa/dashboard') ? 'active' : '' }}" href="/mahasiswa/dashboard">
-                <i class="bi bi-grid-1x2-fill me-3"></i> Dashboard
-            </a>
-            <a class="nav-link {{ Request::is('mahasiswa/booking') ? 'active' : '' }}" href="/mahasiswa/booking">
-                <i class="bi bi-calendar-plus-fill me-3"></i> Booking
-            </a>
-            <a class="nav-link {{ Request::is('mahasiswa/riwayat') ? 'active' : '' }}" href="/mahasiswa/riwayat">
-                <i class="bi bi-clock-history me-3"></i> Riwayat Booking
-            </a>
-            <a class="nav-link" href="#"><i class="bi bi-bell-fill me-3"></i> Notifikasi</a>
-            <a class="nav-link {{ Request::is('mahasiswa/pengaturan') ? 'active' : '' }}" href="{{ route('mahasiswa.pengaturan') }}"><i class="bi bi-gear-fill me-3"></i> Pengaturan</a>
+            @if(Auth::user()->role == 'dosen')
+                <a class="nav-link {{ Request::is('dosen/dashboard') ? 'active' : '' }}" href="/dosen/dashboard">
+                    <i class="bi bi-grid-1x2-fill me-3"></i> Dashboard
+                </a>
+                <a class="nav-link {{ Request::is('dosen/manajemen-booking') ? 'active' : '' }}" href="/dosen/manajemen-booking">
+                    <i class="bi bi-calendar-check-fill me-3"></i> Manajemen Booking
+                </a>
+                <a class="nav-link" href="#"><i class="bi bi-bell-fill me-3"></i> Notifikasi</a>
+                <a class="nav-link {{ Request::is('dosen/pengaturan') ? 'active' : '' }}" href="{{ route('dosen.pengaturan') }}"><i class="bi bi-gear-fill me-3"></i> Pengaturan</a>
+            @else
+                <a class="nav-link {{ Request::is('mahasiswa/dashboard') ? 'active' : '' }}" href="/mahasiswa/dashboard">
+                    <i class="bi bi-grid-1x2-fill me-3"></i> Dashboard
+                </a>
+                <a class="nav-link {{ Request::is('mahasiswa/booking') ? 'active' : '' }}" href="/mahasiswa/booking">
+                    <i class="bi bi-calendar-plus-fill me-3"></i> Booking
+                </a>
+                <a class="nav-link {{ Request::is('mahasiswa/riwayat') ? 'active' : '' }}" href="/mahasiswa/riwayat">
+                    <i class="bi bi-clock-history me-3"></i> Riwayat Booking
+                </a>
+                <a class="nav-link" href="#"><i class="bi bi-bell-fill me-3"></i> Notifikasi</a>
+                <a class="nav-link {{ Request::is('mahasiswa/pengaturan') ? 'active' : '' }}" href="{{ route('mahasiswa.pengaturan') }}"><i class="bi bi-gear-fill me-3"></i> Pengaturan</a>
+            @endif
         </nav>
 
         <div class="mt-auto">
@@ -42,7 +53,7 @@
                 <input type="text" class="form-control rounded-pill ps-5" placeholder="Cari dosen, jadwal, mata kuliah...">
             </div>
 
-            <a href="{{ route('mahasiswa.pengaturan') }}" class="d-flex align-items-center text-decoration-none">
+            <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.pengaturan') : route('mahasiswa.pengaturan') }}" class="d-flex align-items-center text-decoration-none">
                 <div class="position-relative me-4">
                     <i class="bi bi-bell fs-4 text-muted cursor-pointer"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger p-1">

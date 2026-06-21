@@ -38,7 +38,7 @@
             <div class="card shadow-sm border-0 p-4 p-md-4 bg-white rounded-4 h-100">
                 @if($editMode)
                 <!-- Form Edit Profil -->
-                <form action="{{ route('mahasiswa.profil.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('dosen.profil.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <h2 class="fs-5 fw-bold text-dark mb-4">Edit Profil</h2>
@@ -74,7 +74,7 @@
                         <input type="text" class="form-control bg-light" id="role" value="{{ ucfirst($user->role) }}" readonly>
                     </div>
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('mahasiswa.pengaturan') }}" class="btn btn-secondary rounded-3">Batal</a>
+                        <a href="{{ route('dosen.pengaturan') }}" class="btn btn-secondary rounded-3">Batal</a>
                         <button type="submit" class="btn btn-warning text-white rounded-3">Simpan</button>
                     </div>
                 </form>
@@ -105,7 +105,7 @@
                     <p class="fs-6 fw-semibold text-dark mb-0">{{ ucfirst($user->role) }}</p>
                 </div>
                 <div class="mt-auto text-end">
-                    <a href="{{ route('mahasiswa.pengaturan', ['edit' => 'true']) }}" class="btn btn-warning btn-sm text-white px-3 d-inline-flex align-items-center">
+                    <a href="{{ route('dosen.pengaturan', ['edit' => 'true']) }}" class="btn btn-warning btn-sm text-white px-3 d-inline-flex align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil-fill me-2" viewBox="0 0 16 16">
                             <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zM8 6.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l-2.5 2.5-3-3L8.293 7.207a.5.5 0 0 1 .207-.207H8.5a.5.5 0 0 1 .5-.5zm-2.5 3.5a.5.5 0 0 0-.5.5v.5h-.5a.5.5 0 0 0-.5.5v.5h-.5a.5.5 0 0 0-.5.5v.5H3a.5.5 0 0 0-.5.5v.5h-.5a.5.5 0 0 0-.175.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.179A.5.5 0 0 0 8.5 13H9v-.5a.5.5 0 0 0-.5-.5H8v-.5a.5.5 0 0 0-.5-.5H7v-.5a.5.5 0 0 0-.5-.5H6v-.5a.5.5 0 0 0-.5-.5H5.5z"/>
                         </svg>
@@ -128,7 +128,7 @@
                     <h2 class="fs-5 fw-bold text-dark mb-0">Ubah Kata Sandi</h2>
                 </div>
                 <hr class="text-secondary opacity-25 mb-4">
-                <form action="{{ route('mahasiswa.password.update') }}" method="POST">
+                <form action="{{ route('dosen.password.update') }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-3">
@@ -168,7 +168,7 @@
                     preview.classList.remove('d-none'); // Tampilkan gambar preview
 
                     if(placeholder) {
-                        placeholder.classList.add('d-one'); // Sembunyikan placeholder inisial jika ada
+                        placeholder.classList.add('d-none'); // Sembunyikan placeholder inisial jika ada
                     }
                 }
 
