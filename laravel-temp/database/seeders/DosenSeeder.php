@@ -31,7 +31,7 @@ class DosenSeeder extends Seeder
                 ['email' => $email],
                 [
                     'name' => $name,
-                    'password' => Hash::make('password123'), // Default password semua dosen
+                    'password' => Hash::make('password123'),
                     'role' => 'dosen'
                 ]
             );
