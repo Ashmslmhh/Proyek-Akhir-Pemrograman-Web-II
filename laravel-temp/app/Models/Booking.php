@@ -9,20 +9,23 @@ class Booking extends Model
 {
     use HasFactory;
 
-    // Izinkan kolom-kolom ini diisi form
     protected $fillable = [
-        'mahasiswa_id', 
-        'dosen_id', 
-        'tanggal', 
-        'sesi_waktu', 
-        'topik', 
-        'catatan', 
+        'mahasiswa_id',
+        'dosen_id',
+        'tanggal',
+        'sesi_waktu',
+        'topik',
+        'catatan',
         'status'
     ];
 
-    // Relasi ke tabel dosen (User)
     public function dosen()
     {
         return $this->belongsTo(User::class, 'dosen_id');
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 }
