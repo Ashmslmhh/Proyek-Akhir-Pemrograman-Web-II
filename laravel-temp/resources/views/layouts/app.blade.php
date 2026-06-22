@@ -24,8 +24,14 @@
                 <a class="nav-link {{ Request::is('dosen/manajemen-booking') ? 'active' : '' }}" href="/dosen/manajemen-booking">
                     <i class="bi bi-calendar-check-fill me-3"></i> Manajemen Booking
                 </a>
-                <a class="nav-link" href="#"><i class="bi bi-bell-fill me-3"></i> Notifikasi</a>
-                <a class="nav-link {{ Request::is('dosen/pengaturan') ? 'active' : '' }}" href="{{ route('dosen.pengaturan') }}"><i class="bi bi-gear-fill me-3"></i> Pengaturan</a>
+                
+                <a class="nav-link {{ Request::is('dosen/notifikasi') ? 'active' : '' }}" href="{{ route('dosen.notifikasi') }}">
+                    <i class="bi bi-bell-fill me-3"></i> Notifikasi
+                </a>
+                
+                <a class="nav-link {{ Request::is('dosen/pengaturan') ? 'active' : '' }}" href="{{ route('dosen.pengaturan') }}">
+                    <i class="bi bi-gear-fill me-3"></i> Pengaturan
+                </a>
             @else
                 <a class="nav-link {{ Request::is('mahasiswa/dashboard') ? 'active' : '' }}" href="/mahasiswa/dashboard">
                     <i class="bi bi-grid-1x2-fill me-3"></i> Dashboard
@@ -42,7 +48,12 @@
         </nav>
 
         <div class="mt-auto">
-            <a class="nav-link text-danger" href="/login"><i class="bi bi-box-arrow-left me-3"></i> Keluar</a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="nav-link text-danger border-0 bg-transparent text-start w-100">
+                    <i class="bi bi-box-arrow-left me-3"></i> Keluar
+                </button>
+            </form>
         </div>
     </div>
 
@@ -53,28 +64,74 @@
                 <input type="text" class="form-control rounded-pill ps-5" placeholder="Cari dosen, jadwal, mata kuliah...">
             </div>
 
-            <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.pengaturan') : route('mahasiswa.pengaturan') }}" class="d-flex align-items-center text-decoration-none">
-                <div class="position-relative me-4">
-                    <i class="bi bi-bell fs-4 text-muted cursor-pointer"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger p-1">
-                        <span class="visually-hidden">unread messages</span>
-                    </span>
+            <div class="d-flex align-items-center">
+                
+                <div class="dropdown me-4">
+                    <a href="#" class="text-decoration-none d-block" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                        <div class="position-relative">
+                            <i class="bi bi-bell fs-4 text-muted cursor-pointer hover-warning"></i>
+                            
+                            @if(Auth::user()->unreadNotifications->count() > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem;">
+                                    {{ Auth::user()->unreadNotifications->count() }}
+                                    <span class="visually-hidden">notifikasi belum dibaca</span>
+                                </span>
+                            @endif
+                        </div>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-3 p-0" aria-labelledby="notifDropdown" style="width: 380px; overflow: hidden;">
+                        <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white">
+                            <h6 class="mb-0 fw-bold text-dark">Notifikasi</h6>
+                            <a href="#" class="text-decoration-none small text-muted hover-warning">Tandai semua dibaca</a>
+                        </div>
+                        
+                        <div class="list-group list-group-flush" style="max-height: 350px; overflow-y: auto;">
+                            @forelse(Auth::user()->notifications->take(5) as $notification)
+                                <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.notifikasi') : '#' }}" class="list-group-item list-group-item-action p-3 {{ $notification->read_at ? 'bg-white' : 'bg-light' }} border-bottom text-decoration-none">
+                                    <div class="d-flex align-items-start">
+                                        <div class="p-2 rounded-3 me-3 text-success bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="bi bi-check-circle-fill fs-5"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1 small fw-bold text-dark">{{ $notification->data['mahasiswa_name'] ?? 'Notifikasi Baru' }}</h6>
+                                            <p class="mb-1" style="font-size: 0.8rem; color: #666; line-height: 1.4;">
+                                                Mahasiswa {{ $notification->data['pesan'] ?? 'telah mengajukan jadwal bimbingan baru.' }} <br>
+                                                <strong>Topik:</strong> {{ $notification->data['topik'] ?? '-' }}
+                                            </p>
+                                            <small class="text-muted" style="font-size: 0.7rem;">{{ $notification->created_at->diffForHumans() }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="text-center p-4 text-muted small">
+                                    <i class="bi bi-bell-slash fs-3 d-block mb-2 opacity-50"></i>
+                                    Belum ada notifikasi baru.
+                                </div>
+                            @endforelse
+                        </div>
+
+                        <div class="p-2 text-center bg-white border-top">
+                            <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.notifikasi') : '#' }}" class="text-decoration-none small text-muted hover-warning">Lihat semua notifikasi</a>
+                        </div>
+                    </div>
                 </div>
 
-                @if(Auth::user()->foto)
-                    <img src="{{ asset('storage/' . str_replace('public/', '', Auth::user()->foto)) }}"
-                         class="rounded-circle me-3" width="45" height="45" alt="Profile" style="object-fit: cover;">
-                @else
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=F1986B&color=fff"
-                         class="rounded-circle me-3" width="45" height="45" alt="Profile">
-                @endif
+                <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.pengaturan') : route('mahasiswa.pengaturan') }}" class="d-flex align-items-center text-decoration-none">
+                    @if(Auth::user()->foto)
+                        <img src="{{ asset('storage/' . str_replace('public/', '', Auth::user()->foto)) }}"
+                             class="rounded-circle me-3 shadow-sm" width="45" height="45" alt="Profile" style="object-fit: cover;">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=F1986B&color=fff"
+                             class="rounded-circle me-3 shadow-sm" width="45" height="45" alt="Profile">
+                    @endif
 
-                <div>
-                    <h6 class="mb-0 fw-bold text-dark">{{ Auth::user()->name }}</h6>
-                    <small class="text-muted">{{ ucfirst(Auth::user()->role) }}</small>
-                </div>
-            </a>
-
+                    <div>
+                        <h6 class="mb-0 fw-bold text-dark">{{ Auth::user()->name }}</h6>
+                        <small class="text-muted">{{ ucfirst(Auth::user()->role) }}</small>
+                    </div>
+                </a>
+            </div>
         </div>
 
         @yield('content')

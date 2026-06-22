@@ -30,15 +30,30 @@ Route::post('/register', [AuthController::class, 'store']);
 
 /*
 |--------------------------------------------------------------------------
-| Rute Dosen
+| Rute Dosen (Versi Lengkap)
 |--------------------------------------------------------------------------
 */
 Route::prefix('dosen')->middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DosenController::class, 'dashboard']);
+    
+    // Dashboard Utama Dosen
+    Route::get('/dashboard', [DosenController::class, 'index']);
+    
+    // Fungsi Terima / Tolak Permintaan Bimbingan
     Route::post('/booking/{id}/status', [DosenController::class, 'updateStatus']);
+
+    // Halaman Manajemen Booking (Semua Riwayat)
+    Route::get('/manajemen-booking', [DosenController::class, 'manajemenBooking']); 
+
+    // Halaman Pengaturan Dosen & Update Profil/Password
     Route::get('/pengaturan', [DosenController::class, 'pengaturan'])->name('dosen.pengaturan');
     Route::put('/profil/update', [DosenController::class, 'updateProfil'])->name('dosen.profil.update');
     Route::put('/password/update', [DosenController::class, 'updatePassword'])->name('dosen.password.update');
+
+    // Rute Notifikasi Dosen
+    Route::get('/notifikasi', [DosenController::class, 'notifikasi'])->name('dosen.notifikasi');
+    Route::get('/notifikasi/read-all', [DosenController::class, 'markAllRead'])->name('dosen.notifikasi.readAll');
+    Route::post('/notifikasi/{id}/read', [DosenController::class, 'markAsRead'])->name('dosen.notifikasi.read');
+
 });
 
 
@@ -81,5 +96,5 @@ Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
 | Rute Admin & Backend (Kerjaan Teman Kamu)
 |--------------------------------------------------------------------------
 */
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
-Route::resource('users', UserController::class);
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth']);
+Route::resource('users', UserController::class)->middleware(['auth']);

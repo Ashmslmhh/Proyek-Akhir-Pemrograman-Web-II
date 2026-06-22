@@ -16,7 +16,7 @@ class BookingController extends Controller
         return view('mahasiswa.booking', compact('dosen'));
     }
 
-    // Simpan Data Booking ke Database
+    // Simpan Data Booking ke Database & Kirim Notifikasi
     public function store(Request $request)
     {
         $request->validate([
@@ -27,7 +27,7 @@ class BookingController extends Controller
             'catatan' => 'required|string',
         ]);
 
-        Booking::create([
+        $booking = Booking::create([
             'mahasiswa_id' => Auth::id(),
             'dosen_id' => $request->dosen_id,
             'tanggal' => $request->tanggal,
@@ -36,6 +36,12 @@ class BookingController extends Controller
             'catatan' => $request->catatan,
             'status' => 'Menunggu'
         ]);
+
+        // MENGIRIM NOTIFIKASI KE DOSEN TERKAIT
+        $dosen = User::find($request->dosen_id);
+        if ($dosen) {
+            $dosen->notify(new \App\Notifications\BookingMasuk($booking));
+        }
 
         return redirect('/mahasiswa/riwayat')->with('success', 'Pengajuan jadwal bimbingan berhasil dikirim!');
     }
