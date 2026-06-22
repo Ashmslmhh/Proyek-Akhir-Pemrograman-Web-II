@@ -61,4 +61,34 @@ class MahasiswaController extends Controller
 
         return back()->with('status', 'password-updated');
     }
+
+    /**
+     * Menampilkan halaman notifikasi untuk mahasiswa.
+     */
+    public function notifikasi()
+    {
+        $notifications = Auth::user()->notifications;
+
+        return view('mahasiswa.notifikasi', compact('notifications'));
+    }
+
+    /**
+     * Tandai notifikasi sebagai sudah dibaca.
+     */
+    public function markAsRead($id)
+    {
+        $notification = Auth::user()->notifications()->findOrFail($id);
+        $notification->markAsRead();
+
+        return redirect()->route('mahasiswa.notifikasi');
+    }
+
+    /**
+     * Tandai semua notifikasi sebagai sudah dibaca.
+     */
+    public function markAllRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return redirect()->back();
+    }
 }

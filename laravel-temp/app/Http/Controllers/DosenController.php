@@ -47,6 +47,13 @@ class DosenController extends Controller
         if ($booking->dosen_id == Auth::id()) {
             $booking->status = $request->status;
             $booking->save();
+
+            // Kirim notifikasi ke mahasiswa saat status berubah
+            $mahasiswa = User::find($booking->mahasiswa_id);
+            if ($mahasiswa) {
+                $mahasiswa->notify(new \App\Notifications\BookingStatusChanged($booking, $request->status));
+            }
+
             return redirect()->back()->with('success', 'Status bimbingan berhasil diperbarui menjadi: ' . $request->status);
         }
 

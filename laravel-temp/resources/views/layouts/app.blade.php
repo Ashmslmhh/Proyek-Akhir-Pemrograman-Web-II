@@ -40,7 +40,7 @@
                 <a class="nav-link {{ Request::is('mahasiswa/riwayat') ? 'active' : '' }}" href="/mahasiswa/riwayat">
                     <i class="bi bi-clock-history me-3"></i> Riwayat Booking
                 </a>
-                <a class="nav-link" href="#"><i class="bi bi-bell-fill me-3"></i> Notifikasi</a>
+                <a class="nav-link {{ Request::is('mahasiswa/notifikasi') ? 'active' : '' }}" href="{{ route('mahasiswa.notifikasi') }}"><i class="bi bi-bell-fill me-3"></i> Notifikasi</a>
                 <a class="nav-link {{ Request::is('mahasiswa/pengaturan') ? 'active' : '' }}" href="{{ route('mahasiswa.pengaturan') }}"><i class="bi bi-gear-fill me-3"></i> Pengaturan</a>
             @endif
         </nav>
@@ -72,21 +72,61 @@
                     <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-3 p-0" style="width: 380px; overflow: hidden;">
                         <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white">
                             <h6 class="mb-0 fw-bold text-dark">Notifikasi</h6>
-                            <a href="{{ route('dosen.notifikasi.readAll') }}" class="text-decoration-none small text-muted hover-warning">Tandai semua dibaca</a>
+                            @if (Auth::user()->role == 'dosen')
+                                <a href="{{ route('dosen.notifikasi.readAll') }}" class="text-decoration-none small text-muted hover-warning">Tandai semua dibaca</a>
+                            @else
+                                <a href="{{ route('mahasiswa.notifikasi.readAll') }}" class="text-decoration-none small text-muted hover-warning">Tandai semua dibaca</a>
+                            @endif
                         </div>
                         <div class="list-group list-group-flush" style="max-height: 350px; overflow-y: auto;">
                             @forelse(Auth::user()->notifications->take(5) as $notification)
-                                <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.notifikasi') : '#' }}" class="list-group-item list-group-item-action p-3 {{ $notification->read_at ? 'bg-white' : 'bg-light' }} border-bottom text-decoration-none">
-                                    <div class="d-flex align-items-start">
-                                        <div class="p-2 rounded-3 me-3 text-success bg-success bg-opacity-10" style="width: 40px; height: 40px;">
-                                            <i class="bi bi-check-circle-fill fs-5"></i>
+                                @php
+                                    $status = $notification->data['status'] ?? null;
+
+                                    if ($status === 'Ditolak') {
+                                        $iconColor = '#dc3545';
+                                        $bgColor = '#dc354520';
+                                        $iconClass = 'bi-x-circle-fill';
+                                    } elseif ($status === 'Disetujui') {
+                                        $iconColor = '#198754';
+                                        $bgColor = '#19875420';
+                                        $iconClass = 'bi-check-circle-fill';
+                                    } else {
+                                        // Logika Kondisional untuk Ikon Menunggu
+                                        if (Auth::user()->role == 'dosen') {
+                                            // Untuk Dosen: Ikon Centang Hijau
+                                            $iconColor = '#198754';
+                                            $bgColor = '#19875420';
+                                            $iconClass = 'bi-check-circle-fill';
+                                        } else {
+                                            // Untuk Mahasiswa: Ikon Jam Pasir
+                                            $iconColor = '#ffc107';
+                                            $bgColor = '#ffc10720';
+                                            $iconClass = 'bi-hourglass-split';
+                                        }
+                                    }
+
+                                    $notificationRoute = Auth::user()->role == 'dosen' ? route('dosen.notifikasi') : route('mahasiswa.notifikasi');
+                                @endphp
+                                <div class="list-group-item list-group-item-action p-3 {{ $notification->read_at ? 'bg-white' : 'bg-light' }} border-bottom d-flex justify-content-between align-items-start">
+                                    <a href="{{ $notificationRoute }}" class="text-decoration-none text-dark flex-grow-1 d-flex align-items-start">
+                                        <div class="p-2 rounded-3 me-3" style="width: 40px; height: 40px; flex-shrink: 0; background-color: {{ $bgColor }};">
+                                            <i class="bi {{ $iconClass }} fs-5" style="color: {{ $iconColor }};"></i>
                                         </div>
                                         <div>
-                                            <h6 class="mb-1 small fw-bold text-dark">{{ $notification->data['mahasiswa_name'] ?? 'Notifikasi Baru' }}</h6>
+                                            <h6 class="mb-1 small fw-bold text-dark">{{ $notification->data['topik'] ?? $notification->data['mahasiswa_name'] ?? 'Notifikasi Baru' }}</h6>
                                             <p class="mb-1" style="font-size: 0.8rem; color: #666;">{{ $notification->data['pesan'] ?? 'Ada pengajuan baru.' }}</p>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                    @if(!$notification->read_at)
+                                        <form method="POST" action="{{ Auth::user()->role == 'dosen' ? route('dosen.notifikasi.read', $notification->id) : route('mahasiswa.notifikasi.read', $notification->id) }}" class="ms-2" style="margin-top: 5px;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-link p-0 text-muted" title="Tandai dibaca">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             @empty
                                 <div class="text-center p-4 text-muted small">Belum ada notifikasi.</div>
                             @endforelse

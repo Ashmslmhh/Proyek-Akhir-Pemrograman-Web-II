@@ -42,6 +42,10 @@ class BookingController extends Controller
             $dosen->notify(new \App\Notifications\BookingMasuk($booking));
         }
 
+        // MENGIRIM NOTIFIKASI KE MAHASISWA
+        $mahasiswa = Auth::user();
+        $mahasiswa->notify(new \App\Notifications\BookingCreated($booking));
+
         return redirect('/mahasiswa/riwayat')->with('success', 'Pengajuan jadwal bimbingan berhasil dikirim!');
     }
 
