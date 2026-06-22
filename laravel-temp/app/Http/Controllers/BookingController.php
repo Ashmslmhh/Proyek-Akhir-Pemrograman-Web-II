@@ -40,7 +40,6 @@ class BookingController extends Controller
         return redirect('/mahasiswa/riwayat')->with('success', 'Pengajuan jadwal bimbingan berhasil dikirim!');
     }
 
-    // Tampilkan Riwayat Booking Dinamis
     public function index(Request $request)
     {
         $search = $request->search;
