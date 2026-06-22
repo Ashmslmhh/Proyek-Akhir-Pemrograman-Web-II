@@ -135,7 +135,7 @@
                 </div>
 
                 <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.pengaturan') : route('mahasiswa.pengaturan') }}" class="d-flex align-items-center text-decoration-none">
-                    <img src="{{ Auth::user()->foto ? asset('storage/' . str_replace('public/', '', Auth::user()->foto)) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name) }}" class="rounded-circle me-3 shadow-sm" width="45" height="45" alt="Profile" style="object-fit: cover;">
+                    <img src="{{ Auth::user()->foto ? asset('storage/' . str_replace('public/', '', Auth::user()->foto)) : 'https://ui-avatars.com/api/?name='.Auth::user()->initials }}" class="rounded-circle me-3 shadow-sm" width="45" height="45" alt="Profile" style="object-fit: cover;">
                     <div>
                         <h6 class="mb-0 fw-bold text-dark">{{ Auth::user()->name }}</h6>
                         <small class="text-muted">{{ ucfirst(Auth::user()->role) }}</small>

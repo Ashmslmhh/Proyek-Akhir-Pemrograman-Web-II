@@ -45,7 +45,7 @@
                         @if($user->foto)
                             <img id="preview_foto" src="{{ asset('storage/' . str_replace('public/', '', $user->foto)) }}" alt="Foto Profil" class="img-fluid rounded-circle shadow-sm mb-3" style="width: 100px; height: 100px; object-fit: cover;">
                         @else
-                            <img id="preview_foto" src="{{ 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" alt="Preview" class="img-fluid rounded-circle shadow-sm mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                            <img id="preview_foto" src="{{ 'https://ui-avatars.com/api/?name='.$user->initials }}" alt="Preview" class="img-fluid rounded-circle shadow-sm mb-3" style="width: 100px; height: 100px; object-fit: cover;">
                         @endif
                         <label for="input_foto" class="btn btn-sm border border-secondary-subtle text-secondary rounded-pill px-3 cursor-pointer mt-2">
                             Unggah Foto
@@ -76,7 +76,7 @@
                     @if($user->foto)
                         <img src="{{ asset('storage/' . str_replace('public/', '', $user->foto)) }}" alt="Foto Profil" class="img-fluid rounded-circle shadow-sm" style="width: 120px; height: 120px; object-fit: cover;">
                     @else
-                        <img src="{{ 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" alt="Foto Profil" class="img-fluid rounded-circle shadow-sm mx-auto d-block" style="width: 120px; height: 120px; object-fit: cover;">
+                        <img src="{{ 'https://ui-avatars.com/api/?name='.$user->initials }}" alt="Foto Profil" class="img-fluid rounded-circle shadow-sm mx-auto d-block" style="width: 120px; height: 120px; object-fit: cover;">
                     @endif
                 </div>
                 <div class="mb-3">

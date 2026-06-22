@@ -48,12 +48,7 @@
                         @if($user->foto)
                             <img id="preview_foto" src="{{ asset('storage/' . str_replace('public/', '', $user->foto)) }}" alt="Foto Profil" class="img-fluid rounded-circle shadow-sm mb-3" style="width: 100px; height: 100px; object-fit: cover;">
                         @else
-                            <img id="preview_foto" src="#" alt="Preview" class="img-fluid rounded-circle shadow-sm mb-3 d-none" style="width: 100px; height: 100px; object-fit: cover;">
-                            <div id="initial_placeholder" class="ratio ratio-1x1 mb-3" style="width: 100px;">
-                                <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center fs-2 fw-semibold shadow-sm">
-                                    {{ strtoupper(substr($user->name ?? '?', 0, 2)) }}
-                                </div>
-                            </div>
+                            <img id="preview_foto" src="{{ 'https://ui-avatars.com/api/?name='.$user->initials }}" alt="Preview" class="img-fluid rounded-circle shadow-sm mb-3" style="width: 100px; height: 100px; object-fit: cover;">
                         @endif
                         <label for="input_foto" class="btn btn-sm border border-secondary-subtle text-secondary rounded-pill px-3 cursor-pointer">
                             Unggah Foto
@@ -85,11 +80,7 @@
                     @if($user->foto)
                         <img src="{{ asset('storage/' . str_replace('public/', '', $user->foto)) }}" alt="Foto Profil" class="img-fluid rounded-circle shadow-sm" style="width: 120px; height: 120px; object-fit: cover;">
                     @else
-                        <div class="ratio ratio-1x1 mx-auto" style="width: 120px;">
-                            <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center fs-1 fw-semibold shadow-sm">
-                                {{ strtoupper(substr($user->name ?? '?', 0, 2)) }}
-                            </div>
-                        </div>
+                        <img src="{{ 'https://ui-avatars.com/api/?name='.$user->initials }}" alt="Foto Profil" class="img-fluid rounded-circle shadow-sm mx-auto d-block" style="width: 120px; height: 120px; object-fit: cover;">
                     @endif
                 </div>
                 <div class="mb-3">
