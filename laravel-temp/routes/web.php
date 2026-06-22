@@ -97,18 +97,9 @@ Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
     Route::get('/riwayat', [BookingController::class, 'index']);
 
     // Notifikasi
-    Route::get('/notifikasi', function () {
-
-        $notifications = \App\Models\Notification::where(
-            'user_id',
-            Auth::id()
-        )->latest()->get();
-
-        return view(
-            'mahasiswa.notifikasi',
-            compact('notifications')
-        );
-    });
+    Route::get('/notifikasi', [MahasiswaController::class, 'notifikasi'])->name('mahasiswa.notifikasi');
+    Route::post('/notifikasi/{id}/read', [MahasiswaController::class, 'markAsRead'])->name('mahasiswa.notifikasi.read');
+    Route::get('/notifikasi/read-all', [MahasiswaController::class, 'markAllRead'])->name('mahasiswa.notifikasi.readAll');
 
     // Hapus Booking (Fitur Batalkan)
     Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
