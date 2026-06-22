@@ -19,16 +19,17 @@
 
 {{-- Search Bar --}}
 <div class="card-custom mb-4">
-    <form method="GET" action="/mahasiswa/riwayat">
+    <form method="GET" action="{{ url('/mahasiswa/riwayat') }}" autocomplete="off">
         <div class="position-relative">
             <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
 
             <input
-                type="text"
+                type="search"
                 name="search"
-                value="{{ request('search') }}"
+                value="{{ request()->has('search') ? request('search') : '' }}"
                 class="form-control rounded-pill ps-5"
                 placeholder="Cari dosen, topik, atau status..."
+                autocomplete="off"
             >
         </div>
     </form>
@@ -64,7 +65,7 @@
                 @forelse ($bookings as $index => $booking)
                     <tr>
                         <td class="ps-4 fw-bold">
-                            {{ $index + 1 }}
+                            {{ $bookings->firstItem() + $index }}
                         </td>
 
                         <td>
@@ -143,5 +144,48 @@
         </table>
     </div>
 </div>
+
+<div class="mt-4 d-flex justify-content-center">
+    @if ($bookings->hasPages())
+    <div class="d-flex justify-content-center mt-4">
+
+        <nav>
+            <ul class="pagination mb-0">
+
+                {{-- Previous --}}
+                @if ($bookings->onFirstPage())
+                    <li class="page-item disabled">
+                        <span class="page-link rounded-start-pill">‹</span>
+                    </li>
+                @else
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $bookings->previousPageUrl() }}">‹</a>
+                    </li>
+                @endif
+
+                {{-- Page Numbers --}}
+                @foreach ($bookings->getUrlRange(1, $bookings->lastPage()) as $page => $url)
+                    <li class="page-item {{ $page == $bookings->currentPage() ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                    </li>
+                @endforeach
+
+                {{-- Next --}}
+                @if ($bookings->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link rounded-end-pill" href="{{ $bookings->nextPageUrl() }}">›</a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="page-link rounded-end-pill">›</span>
+                    </li>
+                @endif
+
+            </ul>
+        </nav>
+
+    </div>
+    @endif
+    </div>
 
 @endsection

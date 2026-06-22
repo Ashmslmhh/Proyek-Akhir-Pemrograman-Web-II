@@ -125,3 +125,22 @@ body {
     vertical-align: middle;
     border-color: #F5EAE1;
 }
+.pagination .page-link {
+    border: none;
+    color: var(--text-dark);
+    background: #fff;
+    padding: 10px 16px;
+    margin: 0 4px;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.pagination .page-link:hover {
+    background: #F5EAE1;
+    color: var(--text-dark);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--primary-orange);
+    color: white;
+}
