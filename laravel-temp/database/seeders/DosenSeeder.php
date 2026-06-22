@@ -10,30 +10,27 @@ class DosenSeeder extends Seeder
 {
     public function run()
     {
-        $dosenList = [
-            'Andreyan Rizky Baskara, S.Kom., M.Kom',
-            'Nurul Fathanah Mustamin, S.Pd., M.T.',
-            'Dr. Ir. Yuslena Sari, S.Kom., M.Kom',
-            'Muti\'a Maulida, S.Kom., M.T.I',
-            'Ir. Muhammad Alkaff, S.Kom., M.Kom., Ph.D',
-            'Helda Yunita, S.Kom., M.Kom.',
-            'FADLIYANUR, S.Pd.I., M.Pd',
-            'Muhammad Fajrian Noor, S.Kom., M.Kom',
-            'Muhammad Bahit, S.Kom., M.Eng',
-            'Achmad Mujaddid Islami, S.Kom., M.Kom',
-            'Irham Maulani Abdul Gani, S.Kom., M.Kom',
-            'Erika Maulidiya, S.Kom., M.Kom',
-            'Ir. Eka Setya Wijaya, S.T M.Kom'
+        $dosenData = [
+            'andreyan@ulm.ac.id'   => 'Andreyan Rizky Baskara, S.Kom., M.Kom',
+            'nurul@ulm.ac.id'      => 'Nurul Fathanah Mustamin, S.Pd., M.T.',
+            'yuslena@ulm.ac.id'    => 'Dr. Ir. Yuslena Sari, S.Kom., M.Kom',
+            'mutia@ulm.ac.id'      => 'Muti\'a Maulida, S.Kom., M.T.I',
+            'alkaff@ulm.ac.id'     => 'Ir. Muhammad Alkaff, S.Kom., M.Kom., Ph.D',
+            'helda@ulm.ac.id'      => 'Helda Yunita, S.Kom., M.Kom.',
+            'fadliyanur@ulm.ac.id' => 'FADLIYANUR, S.Pd.I., M.Pd',
+            'fajrian@ulm.ac.id'    => 'Muhammad Fajrian Noor, S.Kom., M.Kom',
+            'bahit@ulm.ac.id'      => 'Muhammad Bahit, S.Kom., M.Eng',
+            'achmad@ulm.ac.id'     => 'Achmad Mujaddid Islami, S.Kom., M.Kom',
+            'irham@ulm.ac.id'      => 'Irham Maulani Abdul Gani, S.Kom., M.Kom',
+            'erika@ulm.ac.id'      => 'Erika Maulidiya, S.Kom., M.Kom',
+            'eka@ulm.ac.id'        => 'Ir. Eka Setya Wijaya, S.T M.Kom'
         ];
 
-        foreach ($dosenList as $dosen) {
-            // Bikin email otomatis dari nama depan (misal: andreyan@ulm.ac.id)
-            $email = strtolower(strtok($dosen, ' ')) . '@ulm.ac.id';
-
+        foreach ($dosenData as $email => $name) {
             User::firstOrCreate(
                 ['email' => $email],
                 [
-                    'name' => $dosen,
+                    'name' => $name,
                     'password' => Hash::make('password123'), // Default password semua dosen
                     'role' => 'dosen'
                 ]
