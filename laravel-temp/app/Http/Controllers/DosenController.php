@@ -27,9 +27,12 @@ class DosenController extends Controller
     // Fungsi untuk menyetujui atau menolak booking
     public function updateStatus(Request $request, $id)
     {
+        $request->validate([
+            'status' => 'required|in:Menunggu,Disetujui,Ditolak'
+        ]);
+
         $booking = Booking::findOrFail($id);
 
-        // Pastikan dosen hanya bisa update booking miliknya
         if ($booking->dosen_id == Auth::id()) {
             $booking->update([
                 'status' => $request->status
