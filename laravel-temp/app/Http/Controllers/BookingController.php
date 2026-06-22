@@ -37,7 +37,6 @@ class BookingController extends Controller
             'status' => 'Menunggu'
         ]);
 
-        // MENGIRIM NOTIFIKASI KE DOSEN TERKAIT
         $dosen = User::find($request->dosen_id);
         if ($dosen) {
             $dosen->notify(new \App\Notifications\BookingMasuk($booking));
