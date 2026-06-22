@@ -46,12 +46,17 @@
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div class="search-bar w-50 position-relative">
-                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                <input type="text" class="form-control rounded-pill ps-5" placeholder="Cari dosen, jadwal, mata kuliah...">
-            </div>
+    <form action="{{ url()->current() }}" method="GET" class="search-bar w-50 position-relative">
+        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            class="form-control rounded-pill ps-5"
+            placeholder="Cari dosen, topik, status..."
+        >
+    </form>
 
             <a href="{{ Auth::user()->role == 'dosen' ? route('dosen.pengaturan') : route('mahasiswa.pengaturan') }}" class="d-flex align-items-center text-decoration-none">
                 <div class="position-relative me-4">

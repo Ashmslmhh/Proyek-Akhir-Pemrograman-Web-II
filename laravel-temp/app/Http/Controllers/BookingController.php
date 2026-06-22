@@ -41,59 +41,75 @@ class BookingController extends Controller
     }
 
     // Tampilkan Riwayat Booking Dinamis
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data booking milik mahasiswa yang login + ambil data dosennya + urutkan dari yang terbaru
         $bookings = Booking::with('dosen')
-                    ->where('mahasiswa_id', Auth::id())
-                    ->latest()
-                    ->get();
+            ->where('mahasiswa_id', Auth::id());
+
+        if ($request->search) {
+
+            $bookings->where(function ($query) use ($request) {
+
+                $query->where('topik', 'like', '%' . $request->search . '%')
+
+                    ->orWhere('status', 'like', '%' . $request->search . '%')
+
+                    ->orWhereHas('dosen', function ($q) use ($request) {
+
+                        $q->where('name', 'like', '%' . $request->search . '%');
+
+                    });
+
+            });
+        }
+
+        $bookings = $bookings->latest()->get();
 
         return view('mahasiswa.riwayat', compact('bookings'));
     }
 
     // Tampilkan Form Edit Booking
-public function edit($id)
-{
-    $booking = Booking::findOrFail($id);
+    public function edit($id)
+    {
+        $booking = Booking::findOrFail($id);
 
-    // Keamanan: hanya milik mahasiswa yg login & statusnya masih Menunggu
-    if ($booking->mahasiswa_id != Auth::id() || $booking->status != 'Menunggu') {
-        return redirect('/mahasiswa/riwayat')->with('error', 'Pengajuan tidak dapat diedit.');
+        // Keamanan: hanya milik mahasiswa yg login & statusnya masih Menunggu
+        if ($booking->mahasiswa_id != Auth::id() || $booking->status != 'Menunggu') {
+            return redirect('/mahasiswa/riwayat')->with('error', 'Pengajuan tidak dapat diedit.');
+        }
+
+        $dosen = User::where('role', 'dosen')->get();
+        return view('mahasiswa.edit-booking', compact('booking', 'dosen'));
     }
-
-    $dosen = User::where('role', 'dosen')->get();
-    return view('mahasiswa.edit-booking', compact('booking', 'dosen'));
-}
 
 // Simpan Perubahan Booking
-public function update(Request $request, $id)
-{
-    $booking = Booking::findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
 
-    // Keamanan: hanya milik mahasiswa yg login & statusnya masih Menunggu
-    if ($booking->mahasiswa_id != Auth::id() || $booking->status != 'Menunggu') {
-        return redirect('/mahasiswa/riwayat')->with('error', 'Pengajuan tidak dapat diedit.');
+        // Keamanan: hanya milik mahasiswa yg login & statusnya masih Menunggu
+        if ($booking->mahasiswa_id != Auth::id() || $booking->status != 'Menunggu') {
+            return redirect('/mahasiswa/riwayat')->with('error', 'Pengajuan tidak dapat diedit.');
+        }
+
+        $request->validate([
+            'dosen_id' => 'required',
+            'tanggal'  => 'required|date',
+            'sesi_waktu' => 'required',
+            'topik'    => 'required|string|max:255',
+            'catatan'  => 'required|string',
+        ]);
+
+        $booking->update([
+            'dosen_id'   => $request->dosen_id,
+            'tanggal'    => $request->tanggal,
+            'sesi_waktu' => $request->sesi_waktu,
+            'topik'      => $request->topik,
+            'catatan'    => $request->catatan,
+        ]);
+
+        return redirect('/mahasiswa/riwayat')->with('success', 'Pengajuan bimbingan berhasil diperbarui!');
     }
-
-    $request->validate([
-        'dosen_id' => 'required',
-        'tanggal'  => 'required|date',
-        'sesi_waktu' => 'required',
-        'topik'    => 'required|string|max:255',
-        'catatan'  => 'required|string',
-    ]);
-
-    $booking->update([
-        'dosen_id'   => $request->dosen_id,
-        'tanggal'    => $request->tanggal,
-        'sesi_waktu' => $request->sesi_waktu,
-        'topik'      => $request->topik,
-        'catatan'    => $request->catatan,
-    ]);
-
-    return redirect('/mahasiswa/riwayat')->with('success', 'Pengajuan bimbingan berhasil diperbarui!');
-}
 
     // Fungsi Baru: Batalkan/Hapus Pengajuan
     public function destroy($id)
