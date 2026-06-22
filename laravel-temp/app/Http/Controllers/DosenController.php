@@ -11,17 +11,30 @@ use Illuminate\Support\Facades\Storage;
 
 class DosenController extends Controller
 {
-    // 1. Menampilkan Dashboard Dosen
-    public function index()
+    // 1. Menampilkan Dashboard Dosen (Sekarang dengan Search & Filter)
+    public function index(Request $request)
     {
-        $bookings = Booking::with('mahasiswa')
-                    ->where('dosen_id', Auth::id())
-                    ->latest()
-                    ->get();
+        $query = Booking::with('mahasiswa')->where('dosen_id', Auth::id());
 
-        $menunggu = $bookings->where('status', 'Menunggu')->count();
-        $disetujui = $bookings->where('status', 'Disetujui')->count();
-        $selesai = $bookings->where('status', 'Selesai')->count();
+        // Filter Status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // Pencarian Mahasiswa
+        if ($request->has('search') && $request->search != '') {
+            $query->whereHas('mahasiswa', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $bookings = $query->latest()->get();
+
+        // Statistik Dashboard (Tetap hitung semua data)
+        $all = Booking::where('dosen_id', Auth::id());
+        $menunggu = (clone $all)->where('status', 'Menunggu')->count();
+        $disetujui = (clone $all)->where('status', 'Disetujui')->count();
+        $selesai = (clone $all)->where('status', 'Selesai')->count();
 
         return view('dosen.dashboard', compact('bookings', 'menunggu', 'disetujui', 'selesai'));
     }

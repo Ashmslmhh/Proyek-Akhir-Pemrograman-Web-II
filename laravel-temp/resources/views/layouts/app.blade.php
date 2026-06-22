@@ -56,12 +56,7 @@
     </div>
 
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div class="search-bar w-50 position-relative">
-                <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                <input type="text" class="form-control rounded-pill ps-5" placeholder="Cari dosen, jadwal, mata kuliah...">
-            </div>
-
+        <div class="d-flex justify-content-end align-items-center mb-5">
             <div class="d-flex align-items-center">
                 <div class="dropdown me-4">
                     <a href="#" class="text-decoration-none d-block" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">

@@ -43,7 +43,7 @@ Route::prefix('dosen')->middleware(['auth'])->group(function () {
     Route::post('/booking/{id}/status', [DosenController::class, 'updateStatus']);
 
     // Halaman Manajemen Booking (Semua Riwayat)
-    Route::get('/manajemen-booking', [DosenController::class, 'manajemenBooking']); 
+    Route::get('/manajemen-booking', [DosenController::class, 'manajemenBooking'])->name('dosen.manajemenBooking'); 
 
     // Halaman Pengaturan Dosen & Update Profil/Password
     Route::get('/pengaturan', [DosenController::class, 'pengaturan'])->name('dosen.pengaturan');
@@ -68,22 +68,11 @@ Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
     // Dashboard Mahasiswa
     Route::get('/dashboard', function () {
         $id = Auth::id();
-
         $total = \App\Models\Booking::where('mahasiswa_id', $id)->count();
+        $menunggu = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Menunggu')->count();
+        $disetujui = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Disetujui')->count();
 
-        $menunggu = \App\Models\Booking::where('mahasiswa_id', $id)
-            ->where('status', 'Menunggu')
-            ->count();
-
-        $disetujui = \App\Models\Booking::where('mahasiswa_id', $id)
-            ->where('status', 'Disetujui')
-            ->count();
-
-        return view('mahasiswa.dashboard', compact(
-            'total',
-            'menunggu',
-            'disetujui'
-        ));
+        return view('mahasiswa.dashboard', compact('total', 'menunggu', 'disetujui'));
     });
 
     // Booking
@@ -98,36 +87,23 @@ Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
 
     // Notifikasi
     Route::get('/notifikasi', function () {
-
-        $notifications = \App\Models\Notification::where(
-            'user_id',
-            Auth::id()
-        )->latest()->get();
-
-        return view(
-            'mahasiswa.notifikasi',
-            compact('notifications')
-        );
+        $notifications = \App\Models\Notification::where('user_id', Auth::id())->latest()->get();
+        return view('mahasiswa.notifikasi', compact('notifications'));
     });
 
     // Hapus Booking (Fitur Batalkan)
     Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
 
-    // Pengaturan (Profil & Ubah Password)
-    Route::get('/pengaturan', [MahasiswaController::class, 'pengaturan'])
-        ->name('mahasiswa.pengaturan');
-
-    Route::put('/profil/update', [MahasiswaController::class, 'updateProfil'])
-        ->name('mahasiswa.profil.update');
-
-    Route::put('/password/update', [MahasiswaController::class, 'updatePassword'])
-        ->name('mahasiswa.password.update');
+    // Pengaturan
+    Route::get('/pengaturan', [MahasiswaController::class, 'pengaturan'])->name('mahasiswa.pengaturan');
+    Route::put('/profil/update', [MahasiswaController::class, 'updateProfil'])->name('mahasiswa.profil.update');
+    Route::put('/password/update', [MahasiswaController::class, 'updatePassword'])->name('mahasiswa.password.update');
 });
 
 
 /*
 |--------------------------------------------------------------------------
-| Rute Admin & Backend (Kerjaan Teman Kamu)
+| Rute Admin & Backend
 |--------------------------------------------------------------------------
 */
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth']);
