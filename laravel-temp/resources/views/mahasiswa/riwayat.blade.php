@@ -19,29 +19,17 @@
 
 {{-- Search Bar --}}
 <div class="card-custom mb-4">
-    <form method="GET" action="{{ url('/mahasiswa/riwayat') }}">
-        <div class="input-group">
-            <span class="input-group-text bg-white border-end-0">
-                <i class="bi bi-search"></i>
-            </span>
+    <form method="GET" action="/mahasiswa/riwayat">
+        <div class="position-relative">
+            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
 
             <input
                 type="text"
                 name="search"
-                class="form-control border-start-0"
-                placeholder="Cari dosen, topik, atau status..."
                 value="{{ request('search') }}"
+                class="form-control rounded-pill ps-5"
+                placeholder="Cari dosen, topik, atau status..."
             >
-
-            <button class="btn btn-orange" type="submit">
-                Cari
-            </button>
-
-            @if(request('search'))
-                <a href="/mahasiswa/riwayat" class="btn btn-outline-secondary">
-                    Reset
-                </a>
-            @endif
         </div>
     </form>
 </div>
