@@ -18,11 +18,13 @@
                 <div class="text-center mb-4">
                     <i class="bi bi-intersect display-4" style="color: var(--primary-orange);"></i>
                     <h3 class="fw-bold mt-2">Daftar BimTrack</h3>
-                    <p class="text-muted small">Khusus civitas akademika Universitas Lambung Mangkurat</p>
+                    <p class="text-muted small">Khusus mahasiswa Universitas Lambung Mangkurat</p>
                 </div>
 
                 <form action="/register" method="POST">
                     @csrf
+
+                    <input type="hidden" name="role" value="mahasiswa">
 
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Nama Lengkap</label>
@@ -33,20 +35,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Email Resmi ULM</label>
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="@mhs.ulm.ac.id atau @ulm.ac.id" required>
+                        <label class="form-label small fw-bold text-muted">Email Resmi ULM (@mhs.ulm.ac.id)</label>
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="nim@mhs.ulm.ac.id" required>
                         @error('email')
-                            <div class="invalid-feedback small">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Peran Anda</label>
-                        <select name="role" class="form-select @error('role') is-invalid @enderror" required>
-                            <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-                            <option value="dosen" {{ old('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
-                        </select>
-                        @error('role')
                             <div class="invalid-feedback small">{{ $message }}</div>
                         @enderror
                     </div>
