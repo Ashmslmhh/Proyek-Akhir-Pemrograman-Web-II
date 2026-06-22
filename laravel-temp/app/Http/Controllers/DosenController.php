@@ -41,12 +41,16 @@ class DosenController extends Controller
     }
 
     // 3. Menampilkan semua riwayat/manajemen booking untuk Dosen
-    public function manajemenBooking()
+    public function manajemenBooking(Request $request)
     {
-        $bookings = Booking::with('mahasiswa')
-                    ->where('dosen_id', Auth::id())
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+        $query = Booking::with('mahasiswa')->where('dosen_id', Auth::id());
+
+        // Cek filter status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $bookings = $query->orderBy('created_at', 'desc')->get();
 
         return view('dosen.manajemen-booking', compact('bookings'));
     }
@@ -105,13 +109,11 @@ class DosenController extends Controller
     // 7. Menampilkan halaman notifikasi dosen
     public function notifikasi()
     {
-        // Mengambil semua notifikasi milik dosen yang sedang login
         $notifications = Auth::user()->notifications;
-
         return view('dosen.notifikasi', compact('notifications'));
     }
 
-    // 8. Mengubah status notifikasi menjadi sudah dibaca (per ID)
+    // 8. Mengubah status notifikasi menjadi sudah dibaca
     public function markAsRead($id)
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
@@ -120,7 +122,7 @@ class DosenController extends Controller
         return redirect()->back();
     }
 
-    // 9. Tandai semua notifikasi dibaca (untuk dropdown)
+    // 9. Tandai semua notifikasi dibaca
     public function markAllRead()
     {
         Auth::user()->unreadNotifications->markAsRead();

@@ -8,6 +8,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\MahasiswaController;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +60,7 @@ Route::prefix('dosen')->middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Rute UI Mahasiswa (Kerjaan Kamu)
+| Rute UI Mahasiswa
 |--------------------------------------------------------------------------
 */
 Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
@@ -67,27 +68,60 @@ Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
     // Dashboard Mahasiswa
     Route::get('/dashboard', function () {
         $id = Auth::id();
-        $total = \App\Models\Booking::where('mahasiswa_id', $id)->count();
-        $menunggu = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Menunggu')->count();
-        $disetujui = \App\Models\Booking::where('mahasiswa_id', $id)->where('status', 'Disetujui')->count();
 
-        return view('mahasiswa.dashboard', compact('total', 'menunggu', 'disetujui'));
+        $total = \App\Models\Booking::where('mahasiswa_id', $id)->count();
+
+        $menunggu = \App\Models\Booking::where('mahasiswa_id', $id)
+            ->where('status', 'Menunggu')
+            ->count();
+
+        $disetujui = \App\Models\Booking::where('mahasiswa_id', $id)
+            ->where('status', 'Disetujui')
+            ->count();
+
+        return view('mahasiswa.dashboard', compact(
+            'total',
+            'menunggu',
+            'disetujui'
+        ));
     });
 
     // Booking
     Route::get('/booking', [BookingController::class, 'create']);
     Route::post('/booking', [BookingController::class, 'store']);
+    // Edit Booking
+    Route::get('/booking/{id}/edit', [BookingController::class, 'edit']);
+    Route::put('/booking/{id}', [BookingController::class, 'update']);
 
     // Riwayat
     Route::get('/riwayat', [BookingController::class, 'index']);
+
+    // Notifikasi
+    Route::get('/notifikasi', function () {
+
+        $notifications = \App\Models\Notification::where(
+            'user_id',
+            Auth::id()
+        )->latest()->get();
+
+        return view(
+            'mahasiswa.notifikasi',
+            compact('notifications')
+        );
+    });
 
     // Hapus Booking (Fitur Batalkan)
     Route::delete('/booking/{id}', [BookingController::class, 'destroy']);
 
     // Pengaturan (Profil & Ubah Password)
-    Route::get('/pengaturan', [MahasiswaController::class, 'pengaturan'])->name('mahasiswa.pengaturan');
-    Route::put('/profil/update', [MahasiswaController::class, 'updateProfil'])->name('mahasiswa.profil.update');
-    Route::put('/password/update', [MahasiswaController::class, 'updatePassword'])->name('mahasiswa.password.update');
+    Route::get('/pengaturan', [MahasiswaController::class, 'pengaturan'])
+        ->name('mahasiswa.pengaturan');
+
+    Route::put('/profil/update', [MahasiswaController::class, 'updateProfil'])
+        ->name('mahasiswa.profil.update');
+
+    Route::put('/password/update', [MahasiswaController::class, 'updatePassword'])
+        ->name('mahasiswa.password.update');
 });
 
 
