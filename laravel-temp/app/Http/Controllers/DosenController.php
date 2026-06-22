@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use App\Models\Notification;
 
 class DosenController extends Controller
 {
@@ -27,15 +28,20 @@ class DosenController extends Controller
     // Fungsi untuk menyetujui atau menolak booking
     public function updateStatus(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:Menunggu,Disetujui,Ditolak'
-        ]);
-
         $booking = Booking::findOrFail($id);
 
         if ($booking->dosen_id == Auth::id()) {
+
             $booking->update([
                 'status' => $request->status
+            ]);
+
+            // Buat notif untuk mahasiswa
+            Notification::create([
+                'user_id' => $booking->mahasiswa_id,
+                'judul' => 'Status Bimbingan',
+                'pesan' => 'Pengajuan bimbingan kamu telah '
+                    . strtolower($request->status),
             ]);
         }
 
