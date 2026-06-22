@@ -58,7 +58,6 @@
 
 <div class="d-flex justify-content-between align-items-end mb-3">
     <h5 class="fw-bold mb-0">Permintaan Bimbingan Baru</h5>
-    <a href="#" class="text-decoration-none small fw-bold" style="color: var(--primary-orange);">Lihat Semua <i class="bi bi-arrow-right"></i></a>
 </div>
 
 @if(session('success'))
