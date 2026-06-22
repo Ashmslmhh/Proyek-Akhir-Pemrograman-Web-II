@@ -63,7 +63,7 @@ class BookingController extends Controller
                 });
             })
             ->latest()
-            ->get();
+            ->paginate(5);
 
         return view('mahasiswa.riwayat', compact('bookings'));
     }
