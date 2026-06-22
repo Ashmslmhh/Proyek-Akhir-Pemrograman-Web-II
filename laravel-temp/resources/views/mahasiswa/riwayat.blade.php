@@ -54,7 +54,10 @@
                         </td>
                         <td class="text-center pe-4">
                             @if($booking->status == 'Menunggu')
-                                <form action="/mahasiswa/booking/{{ $booking->id }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah kamu yakin ingin membatalkan pengajuan ini?');">
+                                <a href="/mahasiswa/booking/{{ $booking->id }}/edit"
+                                class="btn btn-sm btn-outline-primary me-1" title="Edit Pengajuan">Edit</a>
+                                <form action="/mahasiswa/booking/{{ $booking->id }}" method="POST"
+                                    class="d-inline" onsubmit="return confirm('Yakin ingin membatalkan pengajuan ini?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Batalkan Pengajuan">Batalkan</button>

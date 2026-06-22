@@ -74,6 +74,9 @@ Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
     // Booking
     Route::get('/booking', [BookingController::class, 'create']);
     Route::post('/booking', [BookingController::class, 'store']);
+    // Edit Booking
+    Route::get('/booking/{id}/edit', [BookingController::class, 'edit']);
+    Route::put('/booking/{id}', [BookingController::class, 'update']);
 
     // Riwayat
     Route::get('/riwayat', [BookingController::class, 'index']);
