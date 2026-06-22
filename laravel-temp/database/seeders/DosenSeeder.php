@@ -23,13 +23,13 @@ class DosenSeeder extends Seeder
             'Achmad Mujaddid Islami, S.Kom., M.Kom',
             'Irham Maulani Abdul Gani, S.Kom., M.Kom',
             'Erika Maulidiya, S.Kom., M.Kom',
-            'Eka Setya Wijaya'
+            'Ir. Eka Setya Wijaya, S.T M.Kom'
         ];
 
         foreach ($dosenList as $dosen) {
             // Bikin email otomatis dari nama depan (misal: andreyan@ulm.ac.id)
             $email = strtolower(strtok($dosen, ' ')) . '@ulm.ac.id';
-            
+
             User::firstOrCreate(
                 ['email' => $email],
                 [
