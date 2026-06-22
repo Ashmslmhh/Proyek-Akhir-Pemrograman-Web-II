@@ -43,27 +43,21 @@ class BookingController extends Controller
     // Tampilkan Riwayat Booking Dinamis
     public function index(Request $request)
     {
+        $search = $request->search;
+
         $bookings = Booking::with('dosen')
-            ->where('mahasiswa_id', Auth::id());
-
-        if ($request->search) {
-
-            $bookings->where(function ($query) use ($request) {
-
-                $query->where('topik', 'like', '%' . $request->search . '%')
-
-                    ->orWhere('status', 'like', '%' . $request->search . '%')
-
-                    ->orWhereHas('dosen', function ($q) use ($request) {
-
-                        $q->where('name', 'like', '%' . $request->search . '%');
-
+            ->where('mahasiswa_id', Auth::id())
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('topik', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhereHas('dosen', function ($dosen) use ($search) {
+                        $dosen->where('name', 'like', "%{$search}%");
                     });
-
-            });
-        }
-
-        $bookings = $bookings->latest()->get();
+                });
+            })
+            ->latest()
+            ->get();
 
         return view('mahasiswa.riwayat', compact('bookings'));
     }
