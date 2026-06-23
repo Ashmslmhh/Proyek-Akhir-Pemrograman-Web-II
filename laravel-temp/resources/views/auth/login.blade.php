@@ -55,10 +55,6 @@
                         </div>
 
                         <div class="mb-4 d-flex justify-content-between align-items-center">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                                <label class="form-check-label small text-muted" for="remember">Ingat saya</label>
-                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-orange w-100 py-2.5">Masuk Sekarang</button>
