@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="mb-4">
-    <h2 class="fw-bold mb-1">Notifikasi</h2>
-    <p class="text-muted">Daftar pemberitahuan terkait status bimbingan dari dosen.</p>
+    <h2 class="fw-bold mb-1">Notifikasi Masuk</h2>
+    <p class="text-muted">Daftar pemberitahuan aktivitas pengajuan bimbingan dari mahasiswa.</p>
 </div>
 
 <div class="card shadow-sm border-0 bg-white rounded-4 p-4">
@@ -16,15 +16,15 @@
                     </div>
                     <div>
                         <p class="mb-1 text-dark">
-                            <strong>{{ $notification->data['topik'] }}</strong>
+                            <strong>{{ $notification->data['mahasiswa_name'] ?? 'Mahasiswa' }}</strong> {{ $notification->data['pesan'] ?? 'mengajukan bimbingan.' }}
                         </p>
-                        <small class="text-muted d-block mb-1">{{ $notification->data['pesan'] }}</small>
+                        <small class="text-muted d-block mb-1">Topik: "{{ $notification->data['topik'] ?? '-' }}"</small>
                         <span class="text-muted small fs-7">{{ $notification->created_at->diffForHumans() }}</span>
                     </div>
                 </div>
-
+                
                 @if(!$notification->read_at)
-                    <form action="{{ route('mahasiswa.notifikasi.read', $notification->id) }}" method="POST">
+                    <form action="{{ route('dosen.notifikasi.read', $notification->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-sm btn-light border rounded-pill px-3 small text-muted">
                             Tandai dibaca
