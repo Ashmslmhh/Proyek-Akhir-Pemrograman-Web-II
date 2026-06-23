@@ -161,7 +161,7 @@
                                         <small class="text-muted d-block">Jadwal Usulan</small>
                                         <div class="text-dark fw-bold">
                                             <i class="bi bi-calendar-event me-1"></i> {{ \Carbon\Carbon::parse($booking->tanggal)->translatedFormat('d M Y') }} 
-                                            <i class="bi bi-clock ms-2 me-1"></i> {{ $booking->sesi_waktu }} WIB
+                                            <i class="bi bi-clock ms-2 me-1"></i> {{ $booking->sesi_waktu }}
                                         </div>
                                     </div>
                                 </div>
