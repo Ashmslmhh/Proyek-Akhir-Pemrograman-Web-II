@@ -59,7 +59,6 @@
                                 <input type="checkbox" class="form-check-input" id="remember" name="remember">
                                 <label class="form-check-label small text-muted" for="remember">Ingat saya</label>
                             </div>
-                            <a href="#" class="small text-decoration-none" style="color: var(--primary-orange);">Lupa Password?</a>
                         </div>
 
                         <button type="submit" class="btn btn-orange w-100 py-2.5">Masuk Sekarang</button>
