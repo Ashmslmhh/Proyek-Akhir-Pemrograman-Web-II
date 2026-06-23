@@ -16,9 +16,9 @@
                     </div>
                     <div>
                         <p class="mb-1 text-dark">
-                            <strong>{{ $notification->data['mahasiswa_name'] }}</strong> {{ $notification->data['pesan'] }}
+                            <strong>{{ $notification->data['mahasiswa_name'] ?? 'Mahasiswa' }}</strong> {{ $notification->data['pesan'] ?? 'mengajukan bimbingan.' }}
                         </p>
-                        <small class="text-muted d-block mb-1">Topik: "{{ $notification->data['topik'] }}"</small>
+                        <small class="text-muted d-block mb-1">Topik: "{{ $notification->data['topik'] ?? '-' }}"</small>
                         <span class="text-muted small fs-7">{{ $notification->created_at->diffForHumans() }}</span>
                     </div>
                 </div>
