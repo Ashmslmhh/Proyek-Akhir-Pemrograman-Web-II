@@ -6,45 +6,73 @@
     <p class="text-muted">Halo, <strong>{{ Auth::user()->name }}</strong>! Selamat datang di sistem BimTrack. Berikut adalah ringkasan progres bimbinganmu.</p>
 </div>
 
-<div class="row g-4 mb-5">
+<div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3 mb-5">
     
-    <div class="col-md-4">
-        <div class="card-custom p-4 border border-light shadow-sm" style="border-radius: 16px; background-color: #f8f9fa;">
+    <div class="col">
+        <div class="card-custom p-3 border border-light shadow-sm h-100" style="border-radius: 16px; background-color: #f8f9fa;">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <p class="text-muted small fw-bold mb-1">Total Pengajuan</p>
-                    <h2 class="fw-bold mb-0 text-dark">{{ $total }}</h2>
+                    <p class="text-muted small fw-bold mb-1">Total</p>
+                    <h2 class="fw-bold mb-0 text-dark">{{ $totalPengajuan }}</h2>
                 </div>
-                <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
-                    <i class="bi bi-file-earmark-text fs-3"></i>
+                <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex justify-content-center align-items-center" style="width: 45px; height: 45px;">
+                    <i class="bi bi-file-earmark-text fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card-custom p-4 border border-warning shadow-sm" style="border-radius: 16px; background-color: #fffdf5;">
+    <div class="col">
+        <div class="card-custom p-3 border border-warning shadow-sm h-100" style="border-radius: 16px; background-color: #fffdf5;">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <p class="text-warning small fw-bold mb-1">Menunggu Konfirmasi</p>
+                    <p class="text-warning small fw-bold mb-1">Menunggu</p>
                     <h2 class="fw-bold mb-0 text-warning">{{ $menunggu }}</h2>
                 </div>
-                <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
-                    <i class="bi bi-hourglass-split fs-3"></i>
+                <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex justify-content-center align-items-center" style="width: 45px; height: 45px;">
+                    <i class="bi bi-hourglass-split fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card-custom p-4 border border-success shadow-sm" style="border-radius: 16px; background-color: #f5fff8;">
+    <div class="col">
+        <div class="card-custom p-3 border border-success shadow-sm h-100" style="border-radius: 16px; background-color: #f5fff8;">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <p class="text-success small fw-bold mb-1">Jadwal Disetujui</p>
+                    <p class="text-success small fw-bold mb-1">Disetujui</p>
                     <h2 class="fw-bold mb-0 text-success">{{ $disetujui }}</h2>
                 </div>
-                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex justify-content-center align-items-center" style="width: 55px; height: 55px;">
-                    <i class="bi bi-check-circle fs-3"></i>
+                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex justify-content-center align-items-center" style="width: 45px; height: 45px;">
+                    <i class="bi bi-check-circle fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card-custom p-3 border border-primary shadow-sm h-100" style="border-radius: 16px; background-color: #f0f8ff;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-primary small fw-bold mb-1">Selesai</p>
+                    <h2 class="fw-bold mb-0 text-primary">{{ $selesai }}</h2>
+                </div>
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center" style="width: 45px; height: 45px;">
+                    <i class="bi bi-journal-check fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card-custom p-3 border border-danger shadow-sm h-100" style="border-radius: 16px; background-color: #fff5f5;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-danger small fw-bold mb-1">Ditolak</p>
+                    <h2 class="fw-bold mb-0 text-danger">{{ $ditolak }}</h2>
+                </div>
+                <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex justify-content-center align-items-center" style="width: 45px; height: 45px;">
+                    <i class="bi bi-x-circle fs-4"></i>
                 </div>
             </div>
         </div>

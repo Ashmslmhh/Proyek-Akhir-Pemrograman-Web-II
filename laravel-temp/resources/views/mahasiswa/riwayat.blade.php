@@ -96,6 +96,10 @@
                                 <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">
                                     Ditolak
                                 </span>
+                            @elseif($booking->status == 'Selesai')
+                                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                                    Selesai
+                                </span>
                             @else
                                 <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">
                                     Menunggu
@@ -124,14 +128,52 @@
                                 </form>
 
                             @else
-
-                                <button class="btn btn-sm btn-light border">
+                                {{-- INI TOMBOL MATA YANG BISA DIKLIK --}}
+                                <button type="button" class="btn btn-sm btn-light border" data-bs-toggle="modal" data-bs-target="#detailModal{{ $booking->id }}">
                                     <i class="bi bi-eye"></i>
                                 </button>
-
                             @endif
                         </td>
                     </tr>
+
+                    <div class="modal fade" id="detailModal{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 shadow">
+                                <div class="modal-header border-bottom-0 pb-0">
+                                    <h5 class="modal-title fw-bold">Detail Riwayat Bimbingan</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-start pt-3">
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Dosen Pembimbing</small>
+                                        <div class="fw-bold text-dark">{{ $booking->dosen->name ?? 'Dosen Tidak Ditemukan' }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Topik Bahasan</small>
+                                        <div class="text-dark">{{ $booking->topik }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Catatan / Pesan Tambahan</small>
+                                        <div class="text-dark p-3 bg-light rounded border">{{ $booking->catatan ?? 'Tidak ada catatan.' }}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Status</small>
+                                        <div class="text-dark fw-bold">{{ $booking->status }}</div>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Jadwal Usulan</small>
+                                        <div class="text-dark fw-bold">
+                                            <i class="bi bi-calendar-event me-1"></i> {{ \Carbon\Carbon::parse($booking->tanggal)->translatedFormat('d M Y') }} 
+                                            <i class="bi bi-clock ms-2 me-1"></i> {{ $booking->sesi_waktu }} WIB
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-top-0 pt-0">
+                                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @empty
                     <tr>
                         <td colspan="6" class="text-center py-4 text-muted">

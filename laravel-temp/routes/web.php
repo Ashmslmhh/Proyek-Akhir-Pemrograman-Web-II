@@ -65,30 +65,13 @@ Route::prefix('dosen')->middleware(['auth'])->group(function () {
 */
 Route::prefix('mahasiswa')->middleware(['auth'])->group(function () {
 
-    // Dashboard Mahasiswa
-    Route::get('/dashboard', function () {
-        $id = Auth::id();
-
-        $total = \App\Models\Booking::where('mahasiswa_id', $id)->count();
-
-        $menunggu = \App\Models\Booking::where('mahasiswa_id', $id)
-            ->where('status', 'Menunggu')
-            ->count();
-
-        $disetujui = \App\Models\Booking::where('mahasiswa_id', $id)
-            ->where('status', 'Disetujui')
-            ->count();
-
-        return view('mahasiswa.dashboard', compact(
-            'total',
-            'menunggu',
-            'disetujui'
-        ));
-    });
+    // Dashboard Mahasiswa (Sekarang diarahkan ke Controller)
+    Route::get('/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
     // Booking
     Route::get('/booking', [BookingController::class, 'create']);
     Route::post('/booking', [BookingController::class, 'store']);
+    
     // Edit Booking
     Route::get('/booking/{id}/edit', [BookingController::class, 'edit']);
     Route::put('/booking/{id}', [BookingController::class, 'update']);

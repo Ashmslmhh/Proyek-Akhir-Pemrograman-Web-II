@@ -3,14 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Booking; // Pastikan Model Booking dipanggil
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
 class MahasiswaController extends Controller
 {
     /**
-     * Memperbarui foto profil pengguna.
+     * 1. Menampilkan Halaman Dashboard Mahasiswa
+     */
+    public function index()
+    {
+        $userId = Auth::id();
+
+        // Menghitung statistik untuk Dashboard
+        $totalPengajuan = Booking::where('mahasiswa_id', $userId)->count();
+        $menunggu = Booking::where('mahasiswa_id', $userId)->where('status', 'Menunggu')->count();
+        $disetujui = Booking::where('mahasiswa_id', $userId)->where('status', 'Disetujui')->count();
+        
+        // Tambahan statistik jika diperlukan di view
+        $ditolak = Booking::where('mahasiswa_id', $userId)->where('status', 'Ditolak')->count();
+        $selesai = Booking::where('mahasiswa_id', $userId)->where('status', 'Selesai')->count();
+
+        return view('mahasiswa.dashboard', compact(
+            'totalPengajuan', 
+            'menunggu', 
+            'disetujui', 
+            'ditolak', 
+            'selesai'
+        ));
+    }
+
+    /**
+     * 2. Memperbarui foto profil pengguna.
      */
     public function updateProfil(Request $request)
     {
@@ -21,7 +48,7 @@ class MahasiswaController extends Controller
 
         if ($request->hasFile('foto')) {
             if ($user->foto) {
-                \Illuminate\Support\Facades\Storage::delete($user->foto);
+                Storage::delete($user->foto);
             }
             $path = $request->file('foto')->store('public/fotos');
             $user->foto = $path;
@@ -32,7 +59,7 @@ class MahasiswaController extends Controller
     }
 
     /**
-     * Menampilkan halaman pengaturan (profil dan ubah password).
+     * 3. Menampilkan halaman pengaturan (profil dan ubah password).
      */
     public function pengaturan(Request $request)
     {
@@ -46,7 +73,7 @@ class MahasiswaController extends Controller
     }
 
     /**
-     * Memperbarui kata sandi pengguna.
+     * 4. Memperbarui kata sandi pengguna.
      */
     public function updatePassword(Request $request)
     {
@@ -63,7 +90,7 @@ class MahasiswaController extends Controller
     }
 
     /**
-     * Menampilkan halaman notifikasi untuk mahasiswa.
+     * 5. Menampilkan halaman notifikasi untuk mahasiswa.
      */
     public function notifikasi()
     {
@@ -73,7 +100,7 @@ class MahasiswaController extends Controller
     }
 
     /**
-     * Tandai notifikasi sebagai sudah dibaca.
+     * 6. Tandai notifikasi sebagai sudah dibaca.
      */
     public function markAsRead($id)
     {
@@ -84,7 +111,7 @@ class MahasiswaController extends Controller
     }
 
     /**
-     * Tandai semua notifikasi sebagai sudah dibaca.
+     * 7. Tandai semua notifikasi sebagai sudah dibaca.
      */
     public function markAllRead()
     {

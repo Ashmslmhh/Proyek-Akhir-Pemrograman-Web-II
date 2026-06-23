@@ -2,15 +2,29 @@
 
 @section('content')
 <div class="mb-4">
-    <h2 class="fw-bold mb-1">Manajemen Booking</h2>
-    <p class="text-muted">Pantau seluruh riwayat dan status pengajuan bimbingan mahasiswa Anda di sini.</p>
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1">Manajemen Booking</h2>
+            <p class="text-muted">Pantau seluruh riwayat dan status pengajuan bimbingan mahasiswa.</p>
+        </div>
+        
+        <form action="{{ url('/dosen/manajemen-booking') }}" method="GET" class="w-25">
+            <input type="text" name="search" class="form-control rounded-pill shadow-sm" placeholder="Cari nama mahasiswa..." value="{{ request('search') }}">
+        </form>
+    </div>
 </div>
 
 <div class="d-flex gap-2 mb-4">
-    <a href="{{ route('dosen.manajemenBooking') }}" class="btn {{ !request('status') ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Semua</a>
-    <a href="{{ route('dosen.manajemenBooking', ['status' => 'Menunggu']) }}" class="btn {{ request('status') == 'Menunggu' ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Menunggu</a>
-    <a href="{{ route('dosen.manajemenBooking', ['status' => 'Disetujui']) }}" class="btn {{ request('status') == 'Disetujui' ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Disetujui</a>
-    <a href="{{ route('dosen.manajemenBooking', ['status' => 'Ditolak']) }}" class="btn {{ request('status') == 'Ditolak' ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Ditolak</a>
+    <a href="{{ url('/dosen/manajemen-booking') }}" 
+       class="btn {{ !request('status') ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Semua</a>
+    <a href="{{ url('/dosen/manajemen-booking?status=Menunggu') }}" 
+       class="btn {{ request('status') == 'Menunggu' ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Menunggu</a>
+    <a href="{{ url('/dosen/manajemen-booking?status=Disetujui') }}" 
+       class="btn {{ request('status') == 'Disetujui' ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Disetujui</a>
+    <a href="{{ url('/dosen/manajemen-booking?status=Selesai') }}" 
+       class="btn {{ request('status') == 'Selesai' ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Selesai</a>
+    <a href="{{ url('/dosen/manajemen-booking?status=Ditolak') }}" 
+       class="btn {{ request('status') == 'Ditolak' ? 'btn-warning text-white' : 'btn-light border' }} rounded-pill px-4">Ditolak</a>
 </div>
 
 <div class="card-custom border-0 shadow-sm p-0 overflow-hidden">
@@ -30,31 +44,43 @@
                 <tr>
                     <td class="ps-4 py-3">
                         <div class="fw-bold text-dark">{{ $booking->mahasiswa->name ?? 'Mahasiswa' }}</div>
-                        <div class="small text-muted">Mahasiswa Bimbingan</div>
                     </td>
                     <td class="py-3">
                         <div class="fw-bold text-dark">{{ $booking->topik }}</div>
-                        <div class="small text-muted" title="{{ $booking->catatan }}">{{ Str::limit($booking->catatan, 35) }}</div>
                     </td>
                     <td class="py-3">
                         <div class="small text-dark fw-bold">{{ \Carbon\Carbon::parse($booking->tanggal)->translatedFormat('d M Y') }}</div>
-                        <div class="small text-muted">{{ $booking->sesi_waktu }}</div>
+                        <div class="small text-muted">{{ $booking->sesi_waktu }} WIB</div>
                     </td>
                     <td class="py-3 text-center">
-                        @if($booking->status == 'Menunggu')
-                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Menunggu</span>
-                        @elseif($booking->status == 'Disetujui')
-                            <span class="badge bg-success px-3 py-2 rounded-pill">Disetujui</span>
+                        @if($booking->status == 'Disetujui')
+                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Disetujui</span>
                         @elseif($booking->status == 'Ditolak')
-                            <span class="badge bg-danger px-3 py-2 rounded-pill">Ditolak</span>
+                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Ditolak</span>
+                        @elseif($booking->status == 'Selesai')
+                            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">Selesai</span>
                         @else
-                            <span class="badge bg-secondary px-3 py-2 rounded-pill">{{ $booking->status }}</span>
+                            <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">Menunggu</span>
                         @endif
                     </td>
                     <td class="pe-4 py-3 text-center">
-                        <button type="button" class="btn btn-sm btn-light border text-muted px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#detailModal{{ $booking->id }}">
-                            <i class="bi bi-eye"></i> Detail
-                        </button>
+                        <div class="d-flex gap-2 justify-content-center align-items-center">
+                            
+                            <button type="button" class="btn btn-sm btn-light border text-muted px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#detailModal{{ $booking->id }}">
+                                <i class="bi bi-eye"></i> Detail
+                            </button>
+
+                            @if($booking->status == 'Disetujui')
+                                <form action="{{ url('/dosen/booking/'.$booking->id.'/status') }}" method="POST" class="m-0" onsubmit="return confirm('Tandai sesi bimbingan ini telah selesai?');">
+                                    @csrf
+                                    <input type="hidden" name="status" value="Selesai">
+                                    <button type="submit" class="btn btn-sm text-white px-3 rounded-pill shadow-sm" style="background-color: var(--primary-orange); border: none;">
+                                        <i class="bi bi-check2-all"></i> Selesai
+                                    </button>
+                                </form>
+                            @endif
+
+                        </div>
                     </td>
                 </tr>
 
@@ -76,13 +102,13 @@
                                 </div>
                                 <div class="mb-3">
                                     <small class="text-muted d-block">Catatan / Pesan</small>
-                                    <div class="text-dark p-3 bg-light rounded">{{ $booking->catatan }}</div>
+                                    <div class="text-dark p-3 bg-light rounded border">{{ $booking->catatan ?? '-' }}</div>
                                 </div>
                                 <div>
-                                    <small class="text-muted d-block">Jadwal Pengajuan</small>
+                                    <small class="text-muted d-block">Jadwal</small>
                                     <div class="text-dark fw-bold">
-                                        <i class="bi bi-calendar-event me-1"></i> {{ \Carbon\Carbon::parse($booking->tanggal)->translatedFormat('d M Y') }} 
-                                        <i class="bi bi-clock ms-2 me-1"></i> {{ $booking->sesi_waktu }}
+                                        <i class="bi bi-calendar-event me-1"></i> {{ \Carbon\Carbon::parse($booking->tanggal)->translatedFormat('d M Y') }}
+                                        <i class="bi bi-clock ms-2 me-1"></i> {{ $booking->sesi_waktu }} WIB
                                     </div>
                                 </div>
                             </div>
@@ -94,10 +120,7 @@
                 </div>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center py-5 text-muted">
-                        <i class="bi bi-folder2-open fs-1 d-block mb-2 opacity-50"></i>
-                        Belum ada riwayat bimbingan.
-                    </td>
+                    <td colspan="5" class="text-center py-5 text-muted">Data tidak ditemukan.</td>
                 </tr>
                 @endforelse
             </tbody>
