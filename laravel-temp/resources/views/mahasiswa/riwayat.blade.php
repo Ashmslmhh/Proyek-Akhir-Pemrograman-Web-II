@@ -108,31 +108,28 @@
                         </td>
 
                         <td class="text-center pe-4">
-                            @if($booking->status == 'Menunggu')
-
-                                <form
-                                    action="/mahasiswa/booking/{{ $booking->id }}"
-                                    method="POST"
-                                    class="d-inline"
-                                    onsubmit="return confirm('Yakin ingin membatalkan pengajuan ini?');"
-                                >
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button
-                                        type="submit"
-                                        class="btn btn-sm btn-outline-danger"
-                                    >
-                                        Batalkan
-                                    </button>
-                                </form>
-
-                            @else
-                                {{-- INI TOMBOL MATA YANG BISA DIKLIK --}}
+                            <div class="d-flex gap-2 justify-content-center align-items-center">
+                                {{-- TOMBOL MATA (Selalu Muncul) --}}
                                 <button type="button" class="btn btn-sm btn-light border" data-bs-toggle="modal" data-bs-target="#detailModal{{ $booking->id }}">
                                     <i class="bi bi-eye"></i>
                                 </button>
-                            @endif
+
+                                @if($booking->status == 'Menunggu')
+                                    {{-- TOMBOL EDIT --}}
+                                    <a href="/mahasiswa/booking/{{ $booking->id }}/edit" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    {{-- TOMBOL BATALKAN --}}
+                                    <form action="/mahasiswa/booking/{{ $booking->id }}" method="POST" class="m-0" onsubmit="return confirm('Yakin ingin membatalkan pengajuan ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </td>
                     </tr>
 
@@ -228,6 +225,6 @@
 
     </div>
     @endif
-    </div>
+</div>
 
 @endsection

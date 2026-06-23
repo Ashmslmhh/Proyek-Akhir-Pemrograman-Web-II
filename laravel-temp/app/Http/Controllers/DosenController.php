@@ -11,17 +11,15 @@ use Illuminate\Support\Facades\Storage;
 
 class DosenController extends Controller
 {
-    // 1. Menampilkan Dashboard Dosen (Sekarang dengan Search & Filter)
+    // 1. Menampilkan Dashboard Dosen
     public function index(Request $request)
     {
         $query = Booking::with('mahasiswa')->where('dosen_id', Auth::id());
 
-        // Filter Status
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
 
-        // Pencarian Mahasiswa
         if ($request->has('search') && $request->search != '') {
             $query->whereHas('mahasiswa', function($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
@@ -30,7 +28,6 @@ class DosenController extends Controller
 
         $bookings = $query->latest()->get();
 
-        // Statistik Dashboard (Tetap hitung semua data)
         $all = Booking::where('dosen_id', Auth::id());
         $menunggu = (clone $all)->where('status', 'Menunggu')->count();
         $disetujui = (clone $all)->where('status', 'Disetujui')->count();
@@ -39,7 +36,7 @@ class DosenController extends Controller
         return view('dosen.dashboard', compact('bookings', 'menunggu', 'disetujui', 'selesai'));
     }
 
-    // 2. Fungsi untuk mengubah status (Terima/Tolak)
+    // 2. Fungsi untuk mengubah status
     public function updateStatus(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
@@ -48,7 +45,6 @@ class DosenController extends Controller
             $booking->status = $request->status;
             $booking->save();
 
-            // Kirim notifikasi ke mahasiswa saat status berubah
             $mahasiswa = User::find($booking->mahasiswa_id);
             if ($mahasiswa) {
                 $mahasiswa->notify(new \App\Notifications\BookingStatusChanged($booking, $request->status));
@@ -60,14 +56,21 @@ class DosenController extends Controller
         return redirect()->back()->with('error', 'Anda tidak memiliki akses.');
     }
 
-    // 3. Menampilkan semua riwayat/manajemen booking untuk Dosen
+    // 3. Menampilkan semua riwayat/manajemen booking untuk Dosen (DENGAN PENCARIAN)
     public function manajemenBooking(Request $request)
     {
         $query = Booking::with('mahasiswa')->where('dosen_id', Auth::id());
 
-        // Cek filter status
+        // Filter Status
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
+        }
+
+        // Pencarian Nama Mahasiswa (Logika Ditambahkan)
+        if ($request->has('search') && $request->search != '') {
+            $query->whereHas('mahasiswa', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
         }
 
         $bookings = $query->orderBy('created_at', 'desc')->get();
@@ -133,7 +136,7 @@ class DosenController extends Controller
         return view('dosen.notifikasi', compact('notifications'));
     }
 
-    // 8. Mengubah status notifikasi menjadi sudah dibaca
+    // 8. Mengubah status notifikasi
     public function markAsRead($id)
     {
         $notification = Auth::user()->notifications()->findOrFail($id);
